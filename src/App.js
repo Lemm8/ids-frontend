@@ -1,23 +1,68 @@
-import logo from './logo.svg';
 import './App.css';
+import Navbar from './components/Navbar';
+import Home from './pages/Home';
+import Footer from './components/Footer';
+import AcercaDe from './pages/AcercaDe';
+import Contactanos from './pages/Contactanos';
+import Servicio from './pages/Servicio';
+import Registro from './pages/Registro';
+import Login from './pages/Login';
+import MisPedidos from './pages/MisPedidos';
+import RequireAuth from './components/RequireAuth';
+import NoAutorizado from './pages/NoAutorizado';
 
-function App() {
+import PersistLogin from './components/PersistLogin';
+
+import { Route, Routes } from 'react-router-dom';
+import MisFinanzas from './pages/MisFinanzas';
+
+function App() {    
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Navbar />
+      <div className='content'>
+        <Routes>
+
+          {/* RUTAS PUBLICAS */}
+
+          {/* HOME */}
+          <Route exact path="/" element={<Home />}></Route>
+          {/* ACERCA DE */}
+          <Route exact path="/acercade" element={<AcercaDe />}></Route>
+          {/* CONTACTANOS */}
+          <Route exact path='/contactanos' element={<Contactanos />}></Route>
+          {/* SERVICIO */}
+          <Route exact path='/servicio/:id' element={<Servicio />}></Route>
+          {/* LOGIN */}
+          <Route exact path='/login' element={<Login />}></Route>
+          {/* REGISTRO */}
+          <Route exact path='/registro' element={<Registro />}></Route>
+          {/* USUARIO NO AUTORIZADO */}
+          <Route exact path='/noautorizado' element={<NoAutorizado />}></Route>
+
+
+
+          {/* RUTAS PROTEGIDAS */}
+
+          {/* PERSIST LOGIN */}
+          <Route element={<PersistLogin />}>
+
+            {/* INICIO (USUARIO) */}
+            <Route element={<RequireAuth allowedRoles={['admin', 'tecnico', 'cliente']} />}>
+              <Route exact path='/mispedidos' element={<MisPedidos />}></Route>
+            </Route>
+            {/* ADMIN DASHBOARD */}
+            <Route element={<RequireAuth allowedRoles={['admin']} />}>
+              <Route exact path='/misfinanzas' element={<MisFinanzas />}></Route>
+            </Route>
+
+          </Route>
+
+        </Routes>
+      
+      </div>
+      <Footer />
     </div>
   );
 }

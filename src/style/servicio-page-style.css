@@ -1,0 +1,14 @@
+.acercade-img {    
+    height: 50%;
+}
+
+.btn-outline-primary {
+    color: rgb( 31, 55, 121 ) !important;
+    border-color: rgb( 31, 55, 121 ) !important;
+}
+
+.btn-outline-primary:hover {
+    color: white !important;
+    border-color: rgb( 31, 55, 121 ) !important;
+    background-color: rgb( 31, 55, 121 ) !important;
+}

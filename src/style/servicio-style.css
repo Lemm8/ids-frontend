@@ -1,0 +1,63 @@
+
+.container-servicios .hexagon-servicio {
+    position: relative;
+    
+    width: 150px;
+    height: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    clip-path: polygon(0 25%, 50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%);
+    background-color: rgb( 31, 55, 121 );
+    transition: .5s;
+}
+  
+
+.hexagon-servicio .contenido-servicio{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 140px;
+    height: 140px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    clip-path: polygon(0 25%, 50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%);
+    transition: .5s;
+    background-color: #f2f2f2;
+    z-index: 10px;
+}
+
+
+.container-servicios .hexagon-servicio .contenido-servicio img {
+    margin-top: 10px;
+    width: 60px;
+    transition: .5s;
+}
+
+.container-servicios .hexagon-servicio:hover .contenido-servicio {
+    transition: .5s;
+    background-color: rgb( 31, 55, 121 );
+}
+
+.container-servicios .hexagon-servicio:hover img {
+    transition: .5s;
+    transform: scale(1.2);
+    filter: brightness(0) invert(1);
+}
+
+
+.titulo-servicio {
+    margin-top: 5px;
+    color: rgb( 31, 55, 121 );
+}
+
+.container-servicios .hexagon-servicio:hover .titulo-servicio {
+
+    transition: .5s;
+    transform: scale(1.2);
+    filter: brightness(0) invert(1);
+
+}

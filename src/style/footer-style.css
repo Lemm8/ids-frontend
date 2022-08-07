@@ -1,0 +1,30 @@
+.footer-container {    
+    max-height: '100%';  
+    max-width: '100%';  
+    background-color: rgb( 33, 37, 41 );
+    color: white;
+}
+
+.footer-row {
+    max-width: '100%';
+    margin: 0;
+}
+
+
+.logo-footer {
+    margin-top: 20px;
+    margin-bottom: 10px;
+    height: 35px;
+}
+
+
+.redes-img {
+    height: 75px;
+    margin: 10px;
+    cursor: pointer;
+}
+
+.redes-img:hover {
+    transition: .5s;
+    filter: brightness(1) invert(1);
+}

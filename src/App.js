@@ -10,6 +10,8 @@ import Login from './pages/Login';
 import MisPedidos from './pages/MisPedidos';
 import RequireAuth from './components/RequireAuth';
 import NoAutorizado from './pages/NoAutorizado';
+import NuevoPedido from './pages/NuevoPedido';
+import ActualizarPedido from './pages/ActualizarPedido';
 
 import PersistLogin from './components/PersistLogin';
 
@@ -55,6 +57,14 @@ function App() {
             {/* ADMIN DASHBOARD */}
             <Route element={<RequireAuth allowedRoles={['admin']} />}>
               <Route exact path='/misfinanzas' element={<MisFinanzas />}></Route>
+            </Route>
+            {/* NUEVO PEDIDO CLIENTE */}
+            <Route element={<RequireAuth allowedRoles={['admin', 'cliente', 'tecnico']} />}>
+              <Route exact path='/nuevopedido' element={<NuevoPedido />}></Route>
+            </Route>
+            {/* AACTUALIZAR PEDIDO */}
+            <Route element={<RequireAuth allowedRoles={['admin', 'tecnico']} />}>
+              <Route exact path='/actualizarpedido/:id' element={<ActualizarPedido />}></Route>
             </Route>
 
           </Route>

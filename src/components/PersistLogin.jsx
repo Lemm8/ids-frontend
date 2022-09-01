@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import useRefreshToken from "../hooks/useRefreshToken";
 import useAuth from "../hooks/useAuth";
 
+import LoadingSpinner from "./LoadingSpinner";
+
 const PersistLogin = () => {
     const [ isLoading, setIsLoading ] = useState( true );
     const refresh = useRefreshToken();
@@ -39,7 +41,7 @@ const PersistLogin = () => {
             { !persist
                 ? <Outlet />
                 : isLoading
-                    ? <h1>Espere unos segundos...</h1>
+                    ? <div> <h3>Espere unos segundos...</h3> <LoadingSpinner /> </div>
                     : <Outlet /> }
         </>
     )

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import useAuth from '../hooks/useAuth';
 
 import { Form, Button, Container, Alert } from 'react-bootstrap'
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 
 import { login } from '../api/auth';
 
@@ -70,8 +70,9 @@ export default function LoginForm() {
                 // GUARDAR CREDENCIALES GLOBALMENTE
                 const accessToken = response.res.data.token;
                 const usuario = response.res.data.usuario;
+                const info = response.res.data.info;
                 const rol = response.res.data.rol;                
-                setAuth({ usuario, accessToken, rol });
+                setAuth({ usuario, info, accessToken, rol });
 
                 setLoggedIn( true );
                 navigate( from, { replace: true } );
@@ -135,7 +136,9 @@ export default function LoginForm() {
 
             <Button variant="outline-primary" type="submit">
                 Iniciar Sesión
-            </Button>            
+            </Button>
+            <hr />
+            No tienes una cuenta? <Link to={'/registro'}>Registrate aqui</Link>        
 
             </Form>
         </Container>

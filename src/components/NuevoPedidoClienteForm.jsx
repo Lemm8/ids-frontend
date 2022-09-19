@@ -48,6 +48,9 @@ export default function () {
         // VALIDAR SERVICIO
         if ( !servicio || servicio === '' ) newErrors.servicio = 'El servicio es obligatorio';
 
+        // VALIDAR LUGAR DE ENTREGA
+        if ( !form.lugar_entrega || form.lugar_entrega === '' ) form.lugar_entrega = 'Nueva Reforma #254, entre Riva Palacio y Brecha California, colonia Benito Juarez';
+
         return newErrors;
 
     }
@@ -59,7 +62,6 @@ export default function () {
 
         const getServicios = async () => {
             try {
-
                 const response = await axiosPrivate.get('/servicios', {
                     signal: controller.signal
                 });
@@ -76,6 +78,7 @@ export default function () {
     
 
     const handleSubmit = ( e ) => {
+        console.log( auth )
       e.preventDefault();
       // VER ERRORES
       const newErrors = findFormErrors();
@@ -83,9 +86,7 @@ export default function () {
       if ( Object.keys( newErrors ).length > 0 ) {
           setErrors( newErrors );
       } else {
-          try {
-              if ( !form.lugar_entrega || form.lugar_entrega === '' ) form.lugar_entrega = 'Nueva Reforma #254, entre Riva Palacio y Brecha California, colonia Benito Juarez';
-              
+          try {                            
               const postPedido = async () => {
                 const response = await axiosPrivate.post( '/pedidos', {
                     titulo: form.titulo, 
@@ -99,7 +100,8 @@ export default function () {
                       'x-token': auth.accessToken
                     }  
                 });
-              }            
+                console.log( response )
+              }   
               postPedido();
               setSent( true );  
               window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
@@ -168,7 +170,7 @@ export default function () {
                 <Form.Control.Feedback type='invalid'> { errors.servicio } </Form.Control.Feedback>
             </Form.Group>
 
-            <Button variant="outline-primary" clas type="submit">
+            <Button variant="outline-primary" type="submit">
                 Enviar solicitud
             </Button>
 

@@ -12,6 +12,7 @@ import RequireAuth from './components/RequireAuth';
 import NoAutorizado from './pages/NoAutorizado';
 import NuevoPedido from './pages/NuevoPedido';
 import ActualizarPedido from './pages/ActualizarPedido';
+import RegistroTecnico from './pages/RegistroTecnico';
 
 import PersistLogin from './components/PersistLogin';
 
@@ -62,11 +63,14 @@ function App() {
             <Route element={<RequireAuth allowedRoles={['admin', 'cliente', 'tecnico']} />}>
               <Route exact path='/nuevopedido' element={<NuevoPedido />}></Route>
             </Route>
-            {/* AACTUALIZAR PEDIDO */}
+            {/* ACTUALIZAR PEDIDO */}
             <Route element={<RequireAuth allowedRoles={['admin', 'tecnico']} />}>
               <Route exact path='/actualizarpedido/:id' element={<ActualizarPedido />}></Route>
             </Route>
-
+            {/* REGISTRO TECNICO */}
+            <Route element={<RequireAuth allowedRoles={['admin']} />}>
+              <Route exact path='/registrotecnico' element={<RegistroTecnico />}></Route>
+            </Route>            
           </Route>
 
         </Routes>

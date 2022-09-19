@@ -1,25 +1,21 @@
 import React, { useState } from 'react'
 
-import { Button, Form, Container } from 'react-bootstrap';
-
-import { useNavigate, useLocation } from 'react-router-dom';
-
-import useAuth from '../hooks/useAuth';
+import { Button, Form, Alert } from 'react-bootstrap';
 
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
 
-import { login } from '../api/auth';
+import useAuth from "../hooks/useAuth.jsx";
 
-export default function RegistroForm() {
+import LoadingSpinner from './LoadingSpinner';
 
-    const { setAuth } = useAuth();
-
-    const navigate = useNavigate();
-    const location = useLocation();
-    const from = location.state?.from?.pathname || '/'
+export default function RegistrarTecnicoForm() {
 
     const [form, setForm] = useState({});
     const [errors, setErrors] = useState({});
+    const [isAdmin, setIsAdmin] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [sent, setSent] = useState(false);
+    const { auth } = useAuth();
 
     const axiosPrivate = useAxiosPrivate();
 
@@ -38,7 +34,7 @@ export default function RegistroForm() {
 
     const findFormErrors = () => {
         // CAMPOS
-        const { nombre, apellidos, correo, telefono, direccion, password1, password2 } = form;
+        const { nombre, apellidos, correo, telefono, direccion, curp, password1, password2 } = form;
         // OBJETO PARA GUSRDAR ERRORES
         const newErrors = {};
 
@@ -58,6 +54,10 @@ export default function RegistroForm() {
         if ( !telefono || telefono === '' ) newErrors.telefono = 'El telófono es obligatorio';
         else if ( !( /^[0-9]*$/.test( telefono ) ) ) newErrors.telefono = 'Solo se permiten dígitos numéricos';
         else if ( telefono.length > 15 ) newErrors.telefono = 'El telefono no puede ser mayor de 15 dígitos';
+
+        // VALIDAR CURP
+        if ( !curp || !curp === '' ) newErrors.curp = 'El CURP es obligatorio';
+        else if ( curp.length !== 18 ) newErrors.curp = 'El CURP debe tener 18 caractéres'
 
         // VALIDAR DIRECCION
         if ( !direccion || direccion === '' ) newErrors.direccion = 'La dirección es obligatoria';
@@ -80,38 +80,44 @@ export default function RegistroForm() {
             setErrors( newErrors );
         } else {
             try {
+                setIsLoading( true )        
                 const controller = new AbortController();
                 const registro = async () => {
-                    const responseRegistro = await axiosPrivate.post( `/clientes`, {
+                    const response = await axiosPrivate.post( `/tecnicos`, {
                         correo: form.correo,
                         nombre: form.nombre,
                         apellidos: form.apellidos,
                         telefono: form.telefono,
                         direccion: form.direccion,
-                        contrasena: form.password1
+                        contrasena: form.password1, 
+                        curp: form.curp,
+                        is_admin: isAdmin
                     }, {
-                        controller: controller.signal
+                        controller: controller.signal,
+                        headers: {
+                            'x-token': auth.accessToken
+                        }
                     })
-
-                    const responseLogin = await login( form.correo, form.password );
-                    const accessToken = responseLogin.res.data.token;
-                    const info = responseLogin.res.data.info;
-                    const usuario = responseLogin.res.data.usuario;
-                    const rol = responseLogin.res.data.rol;
-                    setAuth({ usuario, info, accessToken, rol });
-                }                                
+                }
+                window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });                   
                 registro();
-                navigate( from, { replace: true } );
-                alert( 'Se creo tu cuenta con exito e iniciaste sesion' )
+                setIsLoading( false );
+                setSent( true )
             } catch (error) {
-                
+                console.log( error )
             }
         }
     }
 
 
   return (
-    <Container>
+    <>
+        { sent
+            ? isLoading
+                ? <div> <h3>Espere unos segundos...</h3> <LoadingSpinner /> </div>
+                : <Alert variant='success'>Se ha creado la cuenta con éxito</Alert>
+            : <></>
+        }
         <Form onSubmit={handleSubmit} className="registro-form shadow-lg p-3">
 
         <Form.Group className="mb-3" controlId="form-correo">
@@ -168,9 +174,26 @@ export default function RegistroForm() {
                 isInvalid={ !!errors.direccion }
             />
             <Form.Control.Feedback type='invalid'> { errors.direccion } </Form.Control.Feedback>
-            <Form.Text className="text-muted">
-                Indica la direccion en donde quieres que se entreguen tus pedidos si es que así se requiere
-            </Form.Text>
+        </Form.Group>
+
+        <Form.Group className="mb-3" controlId="form-curp">
+            <Form.Label>CURP</Form.Label>
+            <Form.Control 
+                onChange={ e=> setField('curp', e.target.value) } 
+                required 
+                placeholder="CURP del técnico" 
+                isInvalid={ !!errors.curp }
+            />
+            <Form.Control.Feedback type='invalid'> { errors.curp } </Form.Control.Feedback>
+        </Form.Group>
+
+        <Form.Group className="mb-3" controlId="form-is_admin">
+            <Form.Check
+                label='Adminstrador'
+                type='checkbox'                
+                checked={ isAdmin }
+                onChange={ e => setIsAdmin( e.target.checked ) }
+            />
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="registroform-contra">
@@ -202,6 +225,6 @@ export default function RegistroForm() {
         </Button>
 
         </Form>
-    </Container>
+    </>
   )
 }

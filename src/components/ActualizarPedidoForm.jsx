@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import { Button, Form, Alert, ListGroup, ListGroupItem } from 'react-bootstrap';
+import { Button, Form, Alert, ListGroup } from 'react-bootstrap';
 
 import useAuth from "../hooks/useAuth.jsx";
 
@@ -21,8 +21,6 @@ export default function ActualizarPedidoForm ({ pedido, cliente, servicio, tecni
     const [isLoading, setIsLoading] = useState({});
     const [tecnicos, setTecnicos] = useState([]);
     const [selectedTecnicos, setSelectedTecnicos] = useState([]);
-    const [progreso, setProgreso] = useState('En proceso');
-    const [costo, setCosto] = useState(0);
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -50,19 +48,20 @@ export default function ActualizarPedidoForm ({ pedido, cliente, servicio, tecni
 
     const findFormErrors = () => {
         // CAMPOS
-        const { costo, progreso, tecnico } = form;
+        const { costo, progreso, lugar_entrega, tecnico } = form;
         // OBJETO PARA GUSRDAR ERRORES
         const newErrors = {};
 
         // VALIDAR COSTO
-        if ( !costo || costo === '' ) newErrors.costo = 'El costo es obligatorio';
-        if ( isNaN( costo ) ) newErrors.costo = 'El costo debe ser numerico';
+        if ( !costo || costo === '' ) form.costo = pedido.costo;
+        else if ( isNaN( costo ) ) newErrors.costo = 'El costo debe ser numerico';
 
         // VALIDAR PROGRESO
         if ( !progreso || progreso === '' ) newErrors.progreso = 'El progreso es obligatorio';
         if ( progreso !== 'En espera' && progreso !== 'En proceso' && progreso !== 'Listo' ) newErrors.progreso = 'Este estado de proceso no es valido'
 
-        // VALIDAR TECNICO
+        // VALIDAR LUGAR DE ENTREGA
+        if ( !form.lugar_entrega || form.lugar_entrega === '' ) form.lugar_entrega = pedido.lugar_entrega;
 
         return newErrors;
 
@@ -93,34 +92,34 @@ export default function ActualizarPedidoForm ({ pedido, cliente, servicio, tecni
       // VER SI HAY ERRORES
       if ( Object.keys( newErrors ).length > 0 ) {
           setErrors( newErrors );
-      } else {
-          try {   
-              if ( !form.lugar_entrega || form.lugar_entrega === '' ) form.lugar_entrega = 'Nueva Reforma #254, entre Riva Palacio y Brecha California, colonia Benito Juarez';
-              console.log( 'Enviado' )
-              const updatePedido = async () => {
-                  const controller = new AbortController();                    
-                  const response = await axiosPrivate.put( `/pedidos/${pedido.id}`, {
+      } else {                   
+            const controller = new AbortController(); 
+            const updatePedido = async () => {
+                try {
+                    console.log( form.lugar_entrega )
+                    const response = await axiosPrivate.put( `/pedidos/${pedido.id}`, {
                     costo: Number(form.costo),
                     lugar_entrega: form.lugar_entrega,
+                    nota: form.nota,
                     progreso: form.progreso,
                     tecnicos: selectedTecnicos,
-                  }, {
-                      controller: controller.signal,
-                      headers: {
+                    }, {
+                        controller: controller.signal,
+                        headers: {
                         'x-token': auth.accessToken
-                      }
-                  })
-              }
-              updatePedido();
-              setSent( true );
-              window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
-          } catch (error) {
-              console.error( error );
-              if ( error.response.data?.error?.name === 'TokenExpiredError' ) {
-                navigate( '/login', { state: { from: location }, replace: true } );
-              } 
-          }          
-      }
+                        }
+                    })             
+                } catch (error) {
+                    console.log( error.response.data );
+                    if ( error.response.data?.error?.name === 'TokenExpiredError' ) {
+                        navigate( '/login', { state: { from: location }, replace: true } );
+                    } 
+                }               
+            }            
+            window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+            updatePedido();
+            setSent( true );   
+        }
     }
 
 
@@ -133,11 +132,11 @@ export default function ActualizarPedidoForm ({ pedido, cliente, servicio, tecni
 
     return (
         <>
-            { isLoading
-                ? <div> <h3>Espere unos segundos...</h3> <LoadingSpinner /> </div>
-                : sent
-                    ? <Alert variant='success'>El pedido ha sido actualizado</Alert>
-                    : <></>
+            { sent
+                ? isLoading
+                    ? <div> <h3>Espere unos segundos...</h3> <LoadingSpinner /> </div>
+                    : <Alert variant='success'>Se ha actualizado el pedido con exito</Alert>
+                : <></>
             }
                 <Form onSubmit={handleSubmit} className="pedido-form shadow-lg p-3">
                         <Form.Group className="mb-3" controlId="form-correo">
@@ -159,8 +158,8 @@ export default function ActualizarPedidoForm ({ pedido, cliente, servicio, tecni
                         <Form.Group className="mb-3" controlId="form-correo">
                             <Form.Label>Lugar de entrega</Form.Label>
                             <Form.Control 
-                                onChange={ e=> setField('correo', e.target.value) } 
-                                placeholder="Indica el lugar donde quieres que se haga tu pedido en caso de ser a domicilio"
+                                onChange={ e=> setField('lugar_entrega', e.target.value) } 
+                                placeholder={ pedido.lugar_entrega }
                             />      
                             <Form.Control.Feedback type='invalid'> { errors.lugar_entrega } </Form.Control.Feedback>                  
                         </Form.Group>
@@ -169,12 +168,20 @@ export default function ActualizarPedidoForm ({ pedido, cliente, servicio, tecni
                             <Form.Label>Costo</Form.Label>
                             <Form.Control 
                                 onChange={ e=> setField('costo', e.target.value) } 
-                                required
+                                placeholder={ !pedido.costo ? '-----' : `${pedido.costo}` }
                                 isInvalid={ !!errors.costo }
                             />
                             <Form.Control.Feedback type='invalid'> { errors.costo } </Form.Control.Feedback>
                         </Form.Group>
             
+                        <Form.Group className="mb-3" controlId="form-correo">
+                            <Form.Label>Nota</Form.Label>
+                            <Form.Control 
+                                onChange={ e=> setField('nota', e.target.value) } 
+                                placeholder="*Opcional* Nota de actualización"
+                            />
+                        </Form.Group>
+
                         <Form.Group className="mb-3" controlId="registroform-correo">
                             <Form.Label>Progreso</Form.Label>
                             <Form.Control
@@ -189,23 +196,24 @@ export default function ActualizarPedidoForm ({ pedido, cliente, servicio, tecni
                             </Form.Control>
                         </Form.Group>
             
-                        <Form.Group className="mb-3" controlId="registroform-correo">
-                            <Form.Label>Tecnicos</Form.Label>
-                            { tecnicosPedido.length === 0
-                                ?  <ListGroup horizontal>
-                                        { tecnicosPedido.map( tecnico => <ListGroup.Item>{ tecnico.nombre }</ListGroup.Item> ) }
-                                    </ListGroup>
-                                : <></>}
-                            <MultiSelect
-                                options={ tecnicos.map( tecnico => ({ label: tecnico.nombre, value: tecnico.id }) ) }
-                                onChange={ handleSelectedTecnicos }
-                            ></MultiSelect>                            
-                            <Form.Control.Feedback type='invalid'> { errors.progreso } </Form.Control.Feedback>
-                        </Form.Group>
-
-                        <Button variant="outline-primary" clas type="submit">
+                        { auth.rol === 'admin'
+                            ? <Form.Group className="mb-3" controlId="registroform-correo">
+                                    <Form.Label>Tecnicos</Form.Label>
+                                    { tecnicosPedido.length === 0
+                                        ?  <ListGroup horizontal>
+                                                { tecnicosPedido.map( tecnico => <ListGroup.Item>{ tecnico.nombre }</ListGroup.Item> ) }
+                                            </ListGroup>
+                                        : <></>}
+                                    <MultiSelect
+                                        options={ tecnicos.map( tecnico => ({ label: tecnico.nombre, value: tecnico.id }) ) }
+                                        onChange={ handleSelectedTecnicos }
+                                    ></MultiSelect>                            
+                                    <Form.Control.Feedback type='invalid'> { errors.progreso } </Form.Control.Feedback>
+                                </Form.Group>
+                            : <></> }
+                        <Button variant="outline-primary" type="submit">
                             Actualizar
-                        </Button>        
+                        </Button>
                     </Form>
             
         </>

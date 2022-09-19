@@ -31,6 +31,7 @@ export default function MisPedidos() {
 
       setIsLoading( true )
       let response;
+      console.log( auth );
 
       try {        
         switch ( auth.rol ) {
@@ -42,12 +43,28 @@ export default function MisPedidos() {
               }          
             });
             break;
-          default:
-            response = await axiosPrivate.get(`/pedidos?cliente=${ auth.usuario.id }`, {
+          case 'cliente':
+            response = await axiosPrivate.get(`/pedidos/cliente/${ auth.info.id }`, {
+              signal: controller.signal,
+              headers: {
+                'x-token': auth.accessToken
+              }
+            });
+            break;
+          case 'tecnico':
+            response = await axiosPrivate.get(`/pedidos/tecnico/${ auth.info.id }`, {
               signal: controller.signal,
               headers: {
                 'x-token': auth.accessToken
               }          
+            });
+            break;
+          default:
+            response = await axiosPrivate.get(`/pedidos/cliente/${ auth.info.id }`, {
+              signal: controller.signal,
+              headers: {
+                'x-token': auth.accessToken
+              }
             });
             break;
         }
@@ -56,7 +73,7 @@ export default function MisPedidos() {
         setIsLoading( false )
 
       } catch (error) {
-        console.log( error.response.data );
+        console.log( error );
         if ( error.response.data?.error?.name === 'TokenExpiredError' ) {
           navigate( '/login', { state: { from: location }, replace: true } );
         } 
@@ -65,7 +82,7 @@ export default function MisPedidos() {
         }
       }
     }
-    
+    console.log( pedidos )
     getPedidos();
     setIsLoading( false );
 

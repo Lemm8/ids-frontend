@@ -1,10 +1,15 @@
 import React, { useState } from 'react'
 import { Form, Button } from 'react-bootstrap'
 
+import useAxiosPrivate from '../hooks/useAxiosPrivate';
+
 export default function ContactoForm() {
 
     const [form, setForm] = useState({});
     const [errors, setErrors] = useState({});
+    const [sent, setSent] = useState(false);
+
+    const axiosPrivate = useAxiosPrivate();
 
     // GUARDAR VALORES DEL FORMULARIO
     const setField = ( field, value ) => {
@@ -21,7 +26,7 @@ export default function ContactoForm() {
 
     const findFormErrors = () => {
         // CAMPOS
-        const { nombre, correo, mensaje } = form;
+        const { nombre, asunto, correo, mensaje, celular } = form;
         // OBJETO PARA GUSRDAR ERRORES
         const newErrors = {};
 
@@ -29,12 +34,19 @@ export default function ContactoForm() {
         if ( !nombre || nombre ==='' ) newErrors.nombre = 'El nombre es obligatorio';
         else if ( nombre.length > 40 ) newErrors.nombre = 'El nombre es demasiado largo';
 
+        // VALIDAR ASUNTO
+        if ( !asunto || asunto === '' ) newErrors.asunto = 'El asunto es obligatorio';
+
         // VALIDAR CORREO
         if ( !correo || correo === '' ) newErrors.correo = 'EL correo es obligatorio';
         else if ( !(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test( correo )) ) newErrors.correo = 'El formato de correo no es válido';
 
         // VALIDAR MENSAJE
         if ( !mensaje || mensaje === '' ) newErrors.mensaje = 'El mensaje es obligatorio';
+
+        // VALIDAR CELULAR
+        if ( !celular || celular === '' ) newErrors.celular = 'El celular es obligatorio';
+        else if ( !( /^[0-9]*$/.test( celular ) ) ) newErrors.celular = 'Solo se permiten dígitos numéricos';
 
         return newErrors;
         
@@ -48,7 +60,25 @@ export default function ContactoForm() {
         if ( Object.keys( newErrors ).length > 0 ) {
             setErrors( newErrors );
         } else {
-            alert( 'Todo bien!' );
+            try {
+                const sendMail = async () => {
+                    const controller = new AbortController();
+                    const response = await axiosPrivate.post( '/email/contacto', {
+                        nombre: form.nombre, 
+                        correo: form.correo,
+                        asunto: form.asunto,
+                        celular: form.celular,
+                        mensaje: form.mensaje
+                    }, {
+                        controller: controller.signal
+                    })
+                }
+                sendMail();
+                setSent( true );
+                window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });   
+            } catch (error) {
+                console.error( error );
+            }            
         }
     }
 
@@ -76,6 +106,28 @@ export default function ContactoForm() {
                 isInvalid={ !!errors.correo }
             />
             <Form.Control.Feedback type='invalid'> { errors.correo } </Form.Control.Feedback>
+        </Form.Group>
+
+        <Form.Group className="mb-3" controlId="form-correo">
+            <Form.Label>No. Celular</Form.Label>
+            <Form.Control 
+                onChange={ e=> setField('correo', e.target.value) } 
+                required  
+                placeholder="Número de celular o contacto" 
+                isInvalid={ !!errors.celular }
+            />
+            <Form.Control.Feedback type='invalid'> { errors.celular } </Form.Control.Feedback>
+        </Form.Group>
+
+        <Form.Group className="mb-3" controlId="form-asunto">
+            <Form.Label>Asunto</Form.Label>
+            <Form.Control 
+                onChange={ e=> setField('asunto', e.target.value) } 
+                required 
+                placeholder="Asunto" 
+                isInvalid={ !!errors.asunto }
+            />
+            <Form.Control.Feedback type='invalid'> { errors.asunto } </Form.Control.Feedback>
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="form-mensaje">

@@ -6,7 +6,7 @@ export default function NoAutorizado() {
   
   return (
     <Container>
-        <h1>No esta autorizado para acceder a esta pagina</h1>
+        <h1>Usted no esta autorizado para acceder a esta pagina</h1>
     </Container>
   )
 }

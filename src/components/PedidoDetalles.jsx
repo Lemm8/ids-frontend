@@ -10,10 +10,6 @@ export default function PedidoDetalles({pedido, cliente, tecnicos, servicio, onC
 
   const { auth } = useAuth();
 
-  const validarActualizacion = () => {
-    return auth.rol === 'admin' || auth.rol === 'tecnico'
-  }    
-
   const progresoStyle = ( progreso ) => {
     switch ( progreso ) {
       case 'En espera':
@@ -49,7 +45,7 @@ export default function PedidoDetalles({pedido, cliente, tecnicos, servicio, onC
       </DialogTitle>
       <ListGroup> 
         <ListGroup.Item>
-        { tecnicos.length == 0
+        { tecnicos.length === 0
         ? <>Todavia no se ha asignado un tecnico</>
         : <>                
             <ListGroup horizontal>
@@ -61,12 +57,9 @@ export default function PedidoDetalles({pedido, cliente, tecnicos, servicio, onC
         <ListGroup.Item>Hecho por: { cliente.nombre }</ListGroup.Item>
         <ListGroup.Item>Solicitado en: { formatDate(pedido.fecha_solicitud) }</ListGroup.Item>
         <ListGroup.Item>Costo: { pedido.costo === 0 ? 'Pendiente' : `$${pedido.costo}mxn` }</ListGroup.Item>
-        <ListGroup.Item>Ultima actualizacion: { formatDate(pedido.fecha_solicitud) }</ListGroup.Item>
+        <ListGroup.Item>Ultima actualizacion: { formatDate(pedido.updatedAt) }</ListGroup.Item>
         { progresoStyle( pedido.progreso ) }        
         <ListGroup.Item>Lugar de entrega: { pedido.lugar_entrega }</ListGroup.Item>
-        { validarActualizacion 
-          ? <ListGroup.Item> <Link to={`/actualizarpedido/${pedido.id}`}>Actualizar pedido</Link> </ListGroup.Item>
-          : <></> }
         
       </ListGroup>
 

@@ -8,7 +8,7 @@ export default function Footer() {
         <Row className="footer-row my-auto w-100"> 
             <Col className='red-social-col d-block justify-content-start'>              
               <img className="logo-footer" src={require('../imgs/logo.png')} alt="IDS Logo" />
-              <h6>612-111-2022</h6>
+              <h6>612-140-0284</h6>
               <h6>Nueva Reforma #254</h6>
               <h6>idslpa@hotmail.com</h6>                 
             </Col>     

@@ -32,12 +32,12 @@ export default function Banner() {
                     <h2>Bienvenido a <span className='ids-banner-text'>IDS</span> </h2>
                     <hr />
                     <p>Brindamos <span className='ids-banner-text'>servicios tecnológicos</span> de alta calidad. Instalación de cámaras, cableado estructurado, reparación de equipo y más.</p>
-                    <Button href="/" variant="outline-primary">Ver Servicios</Button>
+                    {/* <Button href="/" variant="outline-primary">Ver Servicios</Button> */}
                   </>                  
                 ) :(
                   <div className="caption-small">
                     <h2>Bienvenido a <span className='ids-banner-text'>IDS</span></h2>
-                    <Button href="/" variant="outline-primary">Ver Servicios</Button>
+                    {/* <Button href="/" variant="outline-primary">Ver Servicios</Button> */}
                   </div> 
                 )}                
               </Col>              

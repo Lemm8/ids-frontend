@@ -91,20 +91,13 @@ export default function RegistroForm() {
                         contrasena: form.password1
                     }, {
                         controller: controller.signal
-                    })
-
-                    const responseLogin = await login( form.correo, form.password );
-                    const accessToken = responseLogin.res.data.token;
-                    const info = responseLogin.res.data.info;
-                    const usuario = responseLogin.res.data.usuario;
-                    const rol = responseLogin.res.data.rol;
-                    setAuth({ usuario, info, accessToken, rol });
+                    });
                 }                                
                 registro();
+                alert( 'Se creo tu cuenta con éxito' )
                 navigate( from, { replace: true } );
-                alert( 'Se creo tu cuenta con exito e iniciaste sesion' )
             } catch (error) {
-                
+                console.log( error );
             }
         }
     }

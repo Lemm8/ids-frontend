@@ -120,7 +120,7 @@ export default function RegistrarTecnicoForm() {
         }
         <Form onSubmit={handleSubmit} className="registro-form shadow-lg p-3">
 
-        <Form.Group className="mb-3" controlId="form-correo">
+        <Form.Group className="mb-3" controlId="form-nombre">
             <Form.Label>{'Nombre(s)'}</Form.Label>
             <Form.Control 
                 onChange={ e=> setField('nombre', e.target.value) } 
@@ -131,7 +131,7 @@ export default function RegistrarTecnicoForm() {
             <Form.Control.Feedback type='invalid'> { errors.nombre } </Form.Control.Feedback>
         </Form.Group>
 
-        <Form.Group className="mb-3" controlId="form-correo">
+        <Form.Group className="mb-3" controlId="form-apellidos">
             <Form.Label>Apellidos</Form.Label>
             <Form.Control 
                 onChange={ e=> setField('apellidos', e.target.value) } 
@@ -154,7 +154,7 @@ export default function RegistrarTecnicoForm() {
             <Form.Control.Feedback type='invalid'> { errors.correo } </Form.Control.Feedback>
         </Form.Group>
 
-        <Form.Group className="mb-3" controlId="registroform-correo">
+        <Form.Group className="mb-3" controlId="form-telefono">
             <Form.Label>Teléfono</Form.Label>
             <Form.Control  
                 onChange={ e=> setField('telefono', e.target.value) } 
@@ -165,7 +165,7 @@ export default function RegistrarTecnicoForm() {
             <Form.Control.Feedback type='invalid'> { errors.telefono } </Form.Control.Feedback>
         </Form.Group>
 
-        <Form.Group className="mb-3" controlId="form-contra">
+        <Form.Group className="mb-3" controlId="form-direccion">
             <Form.Label>Dirección</Form.Label>
             <Form.Control 
                 onChange={ e=> setField('direccion', e.target.value) } 
@@ -196,7 +196,7 @@ export default function RegistrarTecnicoForm() {
             />
         </Form.Group>
 
-        <Form.Group className="mb-3" controlId="registroform-contra">
+        <Form.Group className="mb-3" controlId="form-contra">
             <Form.Label>Contraseña</Form.Label>
             <Form.Control 
                 onChange={ e=> setField('password1', e.target.value) } 
@@ -208,7 +208,7 @@ export default function RegistrarTecnicoForm() {
             <Form.Control.Feedback type='invalid'> { errors.password } </Form.Control.Feedback>
         </Form.Group>
 
-        <Form.Group className="mb-3" controlId="form-contra">
+        <Form.Group className="mb-3" controlId="form-contra2">
             <Form.Label>Confirmar contraseña</Form.Label>
             <Form.Control
                 onChange={ e=> setField('password2', e.target.value) } 

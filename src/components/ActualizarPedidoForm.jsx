@@ -139,23 +139,23 @@ export default function ActualizarPedidoForm ({ pedido, cliente, servicio, tecni
                 : <></>
             }
                 <Form onSubmit={handleSubmit} className="pedido-form shadow-lg p-3">
-                        <Form.Group className="mb-3" controlId="form-correo">
+                        <Form.Group className="mb-3" controlId="form-titulo">
                             <Form.Label>Título: { pedido.titulo }</Form.Label>
                         </Form.Group>
             
-                        <Form.Group className="mb-3" controlId="form-correo">
+                        <Form.Group className="mb-3" controlId="form-descripcion">
                             <Form.Label>Descripción: { pedido.descripcion }</Form.Label>
                         </Form.Group>                        
             
-                        <Form.Group className="mb-3" controlId="form-correo">
+                        <Form.Group className="mb-3" controlId="form-cliente">
                             <Form.Label>Cliente: { cliente.nombre }</Form.Label>
                         </Form.Group>
 
-                        <Form.Group className="mb-3" controlId="form-correo">
+                        <Form.Group className="mb-3" controlId="form-servicio">
                             <Form.Label>Servicio: { servicio.nombre }</Form.Label>
                         </Form.Group>
 
-                        <Form.Group className="mb-3" controlId="form-correo">
+                        <Form.Group className="mb-3" controlId="form-lugar_entrega">
                             <Form.Label>Lugar de entrega</Form.Label>
                             <Form.Control 
                                 onChange={ e=> setField('lugar_entrega', e.target.value) } 
@@ -164,7 +164,7 @@ export default function ActualizarPedidoForm ({ pedido, cliente, servicio, tecni
                             <Form.Control.Feedback type='invalid'> { errors.lugar_entrega } </Form.Control.Feedback>                  
                         </Form.Group>
 
-                        <Form.Group className="mb-3" controlId="form-correo">
+                        <Form.Group className="mb-3" controlId="form-costo">
                             <Form.Label>Costo</Form.Label>
                             <Form.Control 
                                 onChange={ e=> setField('costo', e.target.value) } 
@@ -174,7 +174,7 @@ export default function ActualizarPedidoForm ({ pedido, cliente, servicio, tecni
                             <Form.Control.Feedback type='invalid'> { errors.costo } </Form.Control.Feedback>
                         </Form.Group>
             
-                        <Form.Group className="mb-3" controlId="form-correo">
+                        <Form.Group className="mb-3" controlId="form-nota">
                             <Form.Label>Nota</Form.Label>
                             <Form.Control 
                                 onChange={ e=> setField('nota', e.target.value) } 
@@ -182,7 +182,7 @@ export default function ActualizarPedidoForm ({ pedido, cliente, servicio, tecni
                             />
                         </Form.Group>
 
-                        <Form.Group className="mb-3" controlId="registroform-correo">
+                        <Form.Group className="mb-3" controlId="form-progreso">
                             <Form.Label>Progreso</Form.Label>
                             <Form.Control
                                 as="select"
@@ -197,7 +197,7 @@ export default function ActualizarPedidoForm ({ pedido, cliente, servicio, tecni
                         </Form.Group>
             
                         { auth.rol === 'admin'
-                            ? <Form.Group className="mb-3" controlId="registroform-correo">
+                            ? <Form.Group className="mb-3" controlId="form-tecnicos">
                                     <Form.Label>Tecnicos</Form.Label>
                                     { tecnicosPedido.length === 0
                                         ?  <ListGroup horizontal>

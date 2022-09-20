@@ -85,7 +85,7 @@ export default function ContactoForm() {
   return (
     <Form onSubmit={handleSubmit} className="contacto-form shadow-lg p-3">
 
-        <Form.Group className="mb-3" controlId="form-correo">
+        <Form.Group className="mb-3" controlId="form-nombre">
             <Form.Label>{'Nombre(s)'}</Form.Label>
             <Form.Control 
                 onChange={ e=> setField('nombre', e.target.value) } 
@@ -108,10 +108,10 @@ export default function ContactoForm() {
             <Form.Control.Feedback type='invalid'> { errors.correo } </Form.Control.Feedback>
         </Form.Group>
 
-        <Form.Group className="mb-3" controlId="form-correo">
+        <Form.Group className="mb-3" controlId="form-celular">
             <Form.Label>No. Celular</Form.Label>
             <Form.Control 
-                onChange={ e=> setField('correo', e.target.value) } 
+                onChange={ e=> setField('celular', e.target.value) } 
                 required  
                 placeholder="Número de celular o contacto" 
                 isInvalid={ !!errors.celular }

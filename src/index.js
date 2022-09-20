@@ -4,19 +4,19 @@ import './index.css';
 import App from './App';
 import '../node_modules/font-awesome/css/font-awesome.min.css'; 
 import { AuthProvider } from './context/AuthProvider';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { HashRouter, Routes, Route } from 'react-router-dom';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <BrowserRouter>
+    <HashRouter>
       <AuthProvider>
         <Routes>
           <Route path="/*" element={<App />} ></Route>
         </Routes>          
       </AuthProvider>
-    </BrowserRouter>
+    </HashRouter>
   </React.StrictMode>,
   document.getElementById('root')
 );
